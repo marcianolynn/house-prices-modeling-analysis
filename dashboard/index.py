@@ -4,7 +4,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from pages.homepage import Homepage
-from pages.variables import Variables
+from pages.variables import Variables, build_count
 from pages.models import Models
 from pages.eda import EDA
 
@@ -40,13 +40,13 @@ def display_page(pathname):
 
 
 
-# @app.callback(
-#     Output('output', 'children'),
-#     [Input('pop_dropdown', 'value')]
-# )
-# def update_graph(city):
-#     graph = build_graph(city)
-#     return graph
+@app.callback(
+    Output('var_output', 'children'),
+    [Input('orig_var_dropdown', 'value')]
+)
+def update_graph(variable):
+    graph = build_count(variable)
+    return graph
 
 
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
 ### Import Packages ###
+from assets.data_dictionary import *
+from pages.navbar import Navbar
 import pandas as pd
 import numpy as np
 import dash
@@ -8,9 +10,14 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
+import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_theme(style="darkgrid")
 
 ### NAVBAR ###
-from pages.navbar import Navbar
+
+### DATA DICT ###
 
 nav = Navbar()
 
@@ -34,7 +41,7 @@ num_obs = len(df)
 # get the number of different variables
 num_vars = len(df.columns)
 
-#explain the dataset and the cleaning process
+# explain the dataset and the cleaning process
 data_overview = dbc.Card(
     dbc.CardBody(
         dcc.Markdown('''
@@ -166,49 +173,103 @@ table = dash_table.DataTable(
 )
 
 
-#show the datavisualtion of the variables with the target variable
-# dropdown = html.Div(dcc.Dropdown(
-#     id='pop_dropdown',
-#     options=col_order,
-#     value='ExterQual'
-# ))
+# options = []
+# for var_str in all_vars:
+#     if var_str in col_order or var_str in col_cat:
+#         tag = 'count'
+#     elif var_str in col_num_continuous:
+#         tag = 'bar'
+#     else:
+#         quit
+#     opt = {
+#         'label': var_str,
+#         'value': var_str
+#     }
 
-output = html.Div(id='output',
+
+all_vars = col_order + col_cat + col_num_continuous + col_num_int
+options = [{'label': var_str, 'value': var_str} for var_str in all_vars]
+
+# show the datavisualtion of the variables with the target variable
+dropdown = html.Div(dcc.Dropdown(
+    id='orig_var_dropdown',
+    options=options,
+    value=col_order[0]
+))
+
+output = html.Div(id='var_output',
                   children=[],
                   )
 
+# build countplots
 
+
+def build_count(variable):
+    if variable in all_vars:
+        hist = px.histogram(
+            df[variable],
+            x=variable,
+            
+            title=var_df.loc[var_df['Variable'] ==
+                             variable]['Description'].values[0],
+            color=variable,
+            color_discrete_sequence=px.colors.qualitative.Antique,
+            
+        )
+        hist.update_layout(
+            yaxis_title="Count",
+            font=dict(
+                size=18
+            )
+        )
+
+        graph = dcc.Graph(
+
+            id='variable_plots',
+            figure=hist
+        )
+
+        return graph
+
+
+### BODY ###
 body = dbc.Container(
     [
         dbc.Row(
             [data_overview],
-            className= "variables-row",
+            className="variables-row",
             justify="center"
         ),
         dbc.Row(
             [preprocessing_overview],
-            className= "variables-row",
+            className="variables-row",
             justify="center"
         ),
         dbc.Row(
             [
-            dbc.Col(
-                obs_card,
-                md=4,
-            ),
-            dbc.Col(
-              vars_card ,
-              md=4, 
-            ),
-            
-        ],
-            className= ["variables-row", "justify-content-center"],
+                dbc.Col(
+                    obs_card,
+                    md=4,
+                ),
+                dbc.Col(
+                    vars_card,
+                    md=4,
+                ),
+
+            ],
+            className=["variables-row", "justify-content-center"],
             justify="center"
         ),
         dbc.Row(
             [table],
-            className= "variables-row",
+            className="variables-row",
             justify="center"
+        ),
+        dbc.Row([
+            dropdown,
+            output
+        ]
+
         )
     ]
 
