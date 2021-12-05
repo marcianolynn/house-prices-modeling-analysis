@@ -10,15 +10,15 @@ from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 
 ### NAVBAR ###
-from navbar import Navbar
+from pages.navbar import Navbar
 
 nav = Navbar()
 
 # dataset
-df = pd.read_csv(r'010_data/W207_original_IC.csv')
+df = pd.read_csv(r'data/W207_original_IC.csv')
 
 # data descriptions
-data_descriptions_file = r'010_data/data_description.txt'
+data_descriptions_file = r'data/data_description.txt'
 data_descriptions = pd.read_csv(data_descriptions_file, error_bad_lines=False, sep='\t', header=None,
                                 names=['var_varEx', 'val']).dropna(how='all')
 data_descriptions = data_descriptions.replace(
@@ -167,11 +167,11 @@ table = dash_table.DataTable(
 
 
 #show the datavisualtion of the variables with the target variable
-dropdown = html.Div(dcc.Dropdown(
-    id='pop_dropdown',
-    options=col_order,
-    value='ExterQual'
-))
+# dropdown = html.Div(dcc.Dropdown(
+#     id='pop_dropdown',
+#     options=col_order,
+#     value='ExterQual'
+# ))
 
 output = html.Div(id='output',
                   children=[],

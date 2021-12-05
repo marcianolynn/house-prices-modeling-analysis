@@ -6,14 +6,10 @@ import dash_html_components as html
 import pandas as pd
 import base64
 
-from navbar import Navbar
+from pages.navbar import Navbar
 
 #navbar
 nav = Navbar()
-
-#dataset
-df = pd.read_csv(r'house-prices-analytics\data\train.csv',
-                 index_col=0, parse_dates=True)
 
 # provide a write up of the overview of the dashboard
 overview = dcc.Markdown('''
@@ -26,7 +22,7 @@ overview = dcc.Markdown('''
                         ''')
 
 #homepage image
-image_filename = 'house-prices-analytics\\assets\\ames.png' # replace with your own image
+image_filename = 'dashboard\\assets\\ames.png' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 body = dbc.Container(

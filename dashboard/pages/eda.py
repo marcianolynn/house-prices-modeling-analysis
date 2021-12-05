@@ -16,7 +16,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input
 import base64
 # Navbar
-from navbar import Navbar
+from pages.navbar import Navbar
 
 nav = Navbar()
 
@@ -25,14 +25,14 @@ header = html.H3(
 )
 
 # dataset
-df = pd.read_csv(r'010_data/W207_original_IC.csv')
+df = pd.read_csv(r'data/W207_original_IC.csv')
 
-df_FEN = pd.read_csv(r'010_data/W207_original_IC_FEN.csv')
+df_FEN = pd.read_csv(r'data/W207_original_IC_FEN.csv')
 
 # assets
 # home price image
 # replace with your own image
-image_filename = 'house-prices-analytics\\assets\\house_dollar.jpg'
+image_filename = 'dashboard\\assets\\house_dollar.jpg'
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 # determine absolute correlation of features with our target variable
