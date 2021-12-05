@@ -45,8 +45,8 @@ def display_page(pathname):
     [Input('orig_var_dropdown', 'value')]
 )
 def update_graph(variable):
-    graph = build_count(variable)
-    return graph
+    plot_row = build_count(variable)
+    return plot_row
 
 
 if __name__ == '__main__':

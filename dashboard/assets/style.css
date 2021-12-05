@@ -4,8 +4,15 @@
 
 .variables-row{
     text-align: center;
-    margin: auto;
     padding: 10px;
+    padding-top:20px;
+}
+
+.var_overview_row{
+    margin-top:20px;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
 }
 
 .corr-row{
@@ -17,6 +24,12 @@
     margin-top:50px;
     padding: 20px;
     justify-content: center;
+}
+
+.data_dict_accor{
+    background-color: rgb(155,171,189);
+    text-emphasis: 10px;
+    margin-bottom: 50px;
 }
 
 .center-items{

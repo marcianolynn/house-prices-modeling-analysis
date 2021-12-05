@@ -8,11 +8,12 @@ import dash_table
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import plotly.express as px
+from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 import seaborn as sns
+import base64
 sns.set_theme(style="darkgrid")
 
 ### NAVBAR ###
@@ -23,6 +24,7 @@ nav = Navbar()
 
 # dataset
 df = pd.read_csv(r'data/W207_original_IC.csv')
+df_FEN = pd.read_csv(r'data/W207_original_IC_FEN.csv')
 
 # data descriptions
 data_descriptions_file = r'data/data_description.txt'
@@ -60,7 +62,10 @@ preprocessing_overview = dbc.Card(
                         # Data Pre-Processing
                         Throughout our analysis, we perform data cleansing and ordinal encoding to pre-process the data.
                         
-                        We perform data cleansing by handling missing values by **<LNM insert how we handled missing values>**
+                        We perform data cleansing by handling missing values by:
+                        * Filling in for missing or "NaN" values
+                        * Validate the correspondence between the dataset values and data dictionary
+                        * Fill in for boolean blank values
                         
                         We perform ordinal encoding by changing our ordinal features from string representation to numerical representation. 
                         ''')
@@ -78,7 +83,7 @@ obs_card = dbc.Card(
         ]
     ),
     style={"width": "20rem"},
-    color="darkgray",
+    color="rgb(217,175,107)",
     inverse=True
 )
 
@@ -93,7 +98,7 @@ vars_card = dbc.Card(
         ]
     ),
     style={"width": "20rem"},
-    color="darkgray",
+    color="rgb(172,174,161)",
     inverse=True
 )
 
@@ -173,20 +178,6 @@ table = dash_table.DataTable(
 )
 
 
-# options = []
-# for var_str in all_vars:
-#     if var_str in col_order or var_str in col_cat:
-#         tag = 'count'
-#     elif var_str in col_num_continuous:
-#         tag = 'bar'
-#     else:
-#         quit
-#     opt = {
-#         'label': var_str,
-#         'value': var_str
-#     }
-
-
 all_vars = col_order + col_cat + col_num_continuous + col_num_int
 options = [{'label': var_str, 'value': var_str} for var_str in all_vars]
 
@@ -201,48 +192,92 @@ output = html.Div(id='var_output',
                   children=[],
                   )
 
-# build countplots
+# build variable plots
 
 
 def build_count(variable):
     if variable in all_vars:
-        hist = px.histogram(
-            df[variable],
-            x=variable,
-            
-            title=var_df.loc[var_df['Variable'] ==
-                             variable]['Description'].values[0],
-            color=variable,
-            color_discrete_sequence=px.colors.qualitative.Antique,
-            
-        )
-        hist.update_layout(
-            yaxis_title="Count",
-            font=dict(
-                size=18
+        title_text = var_df.loc[var_df['Variable'] ==
+                                variable]['Description'].values[0]
+
+        # variable histogram
+        hist = dcc.Graph(
+            id='variable_hist',
+            figure=px.histogram(
+                df[variable],
+                x=variable,
+                color=variable,
+                color_discrete_sequence=px.colors.qualitative.Antique,
+            ).update_layout(
+                yaxis_title="Count"
             )
         )
 
-        graph = dcc.Graph(
-
-            id='variable_plots',
-            figure=hist
+        box = dcc.Graph(
+            id='variable_box',
+            figure=px.box(
+                df[variable],
+                x=variable,
+                y=df_FEN['FE_SalePrice_Per_IndoorArea'],
+                points='all',
+                color=variable,
+                color_discrete_sequence=px.colors.qualitative.Antique,
+            ).update_layout(
+                showlegend=False,
+                yaxis_title="Sale Price per Square Foot"
+            )
         )
 
-        return graph
+        plot_row = dbc.Row(
+            [
+                html.B(title_text),
+                dbc.Col(
+                    hist
+                ),
+                dbc.Col(
+                    box
+                )
+            ]
+        )
 
+        return plot_row
+
+
+# replace with your own image
+image_filename = 'dashboard\\assets\\preprocessing.png'
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 ### BODY ###
 body = dbc.Container(
     [
         dbc.Row(
-            [data_overview],
-            className="variables-row",
-            justify="center"
-        ),
-        dbc.Row(
-            [preprocessing_overview],
-            className="variables-row",
+            [
+                dbc.Col(
+                    data_overview,
+                    md=3
+                ),
+                dbc.Col(
+                    preprocessing_overview,
+                    md=5
+                ),
+                dbc.Col(
+                    html.Div(
+                        [
+                            html.Img(
+                                src='data:image/png;base64,{}'.format(
+                                    encoded_image.decode()),
+                                style={
+                                    'width': '90%'}
+                            ),
+                        ]
+                    ),
+                    md=4
+                )
+            ],
+            style={
+                'width': 'auto'
+            },
+            className="var_overview_row",
             justify="center"
         ),
         dbc.Row(
@@ -260,17 +295,33 @@ body = dbc.Container(
             className=["variables-row", "justify-content-center"],
             justify="center"
         ),
+
         dbc.Row(
-            [table],
+            [
+                dropdown,
+                output
+            ],
             className="variables-row",
             justify="center"
-        ),
-        dbc.Row([
-            dropdown,
-            output
-        ]
 
-        )
+        ),
+        dbc.Row(
+            [
+                dbc.Accordion(
+                    [
+                        dbc.AccordionItem(
+                            [table],
+                            title="View the Data Dictionary",
+                        )
+                    ],
+                    start_collapsed=True,
+                    flush=True,
+                    className="data_dict_accor"
+
+                ),
+            ],
+            justify="center"
+        ),
     ]
 
 )
