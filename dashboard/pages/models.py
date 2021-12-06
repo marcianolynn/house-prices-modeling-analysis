@@ -364,7 +364,7 @@ final_body = dbc.Container(
                         ),
                         dbc.Row(
                             dbc.Button(
-                                "View our Streamlite Final Model Implementation",
+                                "View our Streamlit Final Model Implementation",
                                 href="https://share.streamlit.io/stjokerli/stream_lite_showcase/main/main.py",
                                 external_link=True,
                                 color="secondary",
