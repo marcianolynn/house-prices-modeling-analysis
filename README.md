@@ -28,9 +28,9 @@ In this repo, you will find the following subdirectories:
 - Shap
 - Optuna
 
-- Dash <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Dash_by_plotly.jpeg" alt="alt text" width="200" height="100">
+- Dash <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Dash_by_plotly.jpeg" alt="alt text" width="100" height="50">
 
-- Streamlit 
+- Streamlit <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/streamlit-logo-secondary-colormark-darktext.svg" alt="alt text" width="100" height="50">
 
 ---
 ### References
