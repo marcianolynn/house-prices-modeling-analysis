@@ -1,4 +1,4 @@
-![alt text](https://www.google.com/url?sa=i&url=https%3A%2F%2Ftowardsdatascience.com%2Fmachine-learning-predicting-house-prices-with-regression-2388bb876a6f&psig=AOvVaw34Hbd4tXtKMoJ7796QRcOE&ust=1638845065842000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCNje1O2TzvQCFQAAAAAdAAAAABAD)
+![alt text](https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Readme%20Image.jpeg)
 
 # house-prices-modeling-analysis
 
