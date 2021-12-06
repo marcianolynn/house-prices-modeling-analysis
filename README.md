@@ -1,4 +1,6 @@
-![alt text](https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Readme%20Image.jpeg)
+
+
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Readme%20Image.jpeg" alt="alt text" width="900" height="300">
 
 # house-prices-modeling-analysis
 
