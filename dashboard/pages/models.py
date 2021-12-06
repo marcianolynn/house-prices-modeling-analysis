@@ -331,7 +331,7 @@ optuna_info = dbc.Card(
             dcc.Markdown('''
                         Optuna allowed us to enhance our modeling training to achieve optimal results
 
-                        * Utilizes a traditional searchCV brute force method
+                        * Smarter than than the traditional searchCV brute force method
                         * Hyperparameter optimization coiciding with the gradient descent algorithm
                         ''')
         )
@@ -414,7 +414,10 @@ body = dbc.Container(
                         html.H1("Tree Algorithm Timeline")
                     ),
                     dbc.CardBody(
-                        tree_hist_img
+                        dbc.Row(tree_hist_img,
+                        className="variables-row",
+                        justify="center"
+                        )
                     )
                 ]
             ),
