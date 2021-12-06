@@ -37,6 +37,15 @@
     margin-top:50px;
 }
 
+.model-tabs{
+    margin-top: 50px;
+    align-items: center;
+}
+
+.model-tab-content{
+    align-items: center;
+}
+
 .center-items{
     align-items: center;
     text-align: center;

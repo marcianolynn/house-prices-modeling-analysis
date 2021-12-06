@@ -9,21 +9,46 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input
+import base64
 # Navbar
 from pages.navbar import Navbar
 
 nav = Navbar()
 
+# assets
+# home price image
+RF_img_filename = 'dashboard\\assets\\RF.png'
+RF_encoded_image = base64.b64encode(open(RF_img_filename, 'rb').read())
 
-# dropdown = html.Div(dcc.Dropdown(
-#     id='pop_dropdown',
-#     options=options,
-#     value='Abingdon city, Illinois'
-# ))
+KNN_img_filename = 'dashboard\\assets\\knn.png'
+KNN_encoded_image = base64.b64encode(open(KNN_img_filename, 'rb').read())
 
-# output = html.Div(id='output',
-#                   children=[],
-#                   )
+CB_img_filename = 'dashboard\\assets\\catboost.png'
+CB_encoded_image = base64.b64encode(open(CB_img_filename, 'rb').read())
+
+XG_img_filename = 'dashboard\\assets\\xgboost.png'
+XG_encoded_image = base64.b64encode(open(XG_img_filename, 'rb').read())
+
+
+def create_img_div(encoded_img, img_type):
+    img_div = html.Div(
+        [
+            html.Img(
+                src='data:image/png;base64,{}'.format(
+                    encoded_img.decode()),
+                style={
+                    'height': '80%',
+                    'width': '80%'}
+            ),
+        ]
+    )
+    return img_div
+
+
+rf_img = create_img_div(RF_encoded_image, 'png')
+knn_img = create_img_div(KNN_encoded_image, 'png')
+cb_img = create_img_div(CB_encoded_image, 'png')
+xg_img = create_img_div(CB_encoded_image, 'png')
 
 
 def create_base_info(model_name, model_info):
@@ -77,66 +102,122 @@ def create_var_info(num_vars):
     return content
 
 
-def create_base_tab(info, rmse, vars):
+def create_base_tab(info, rmse, vars, img_div):
     body = dbc.Container(
         [
             dbc.Row(
-                [info],
-                className="variables-row",
-                justify="center"
-            ),
-            dbc.Row(
                 [
                     dbc.Col(
-                        rmse
+                        img_div
                     ),
                     dbc.Col(
-                        vars
-                    )
+                        [
+                            dbc.Row(
+                                [info],
+                                justify="center"
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(
+                                        rmse
+                                    ),
+                                    dbc.Col(
+                                        vars
+                                    )
+                                ],
+                                className="variables-row",
+                                justify="center"
+                            )
+                        ],
+                        md=8
+                    ),
                 ],
-                className="variables-row",
-                justify="center"
+                className='model-tab-content'
             )
-        ]
+        ],
+
     )
     return body
 
 
 base_model1_desc = dcc.Markdown(
     '''
-    Awesome info about Random Forest
+    We used a Random Forest model as our initial baseline model.
+    
+    There were 79 features trained in this model from the cleaned and processed dataset. 
+    
+    ** OVERVIEW: **
+    * Grows a forest of decision trees
+    * Data from these trees are then merged together to ensure the most accurate predictions
+    * Forest assures a more accurate result with a larger number of groups and decisions rather than the narrowness of a single tree
+    * Benefit of adding randomness
+    * Finds the best feature among a random subset of features
     '''
 )
 base_model1_info = create_base_info('Random Forest', base_model1_desc)
-base_model1_rmse = create_rmse_info(0.000)
-base_model1_vars = create_var_info(20)
-base_model1_tab = create_base_tab(base_model1_info, base_model1_rmse, base_model1_vars)
+base_model1_rmse = create_rmse_info(29.433)
+base_model1_vars = create_var_info(73)
+base_model1_tab = create_base_tab(
+    base_model1_info, base_model1_rmse, base_model1_vars, rf_img)
 
 base_model2_desc = dcc.Markdown(
     '''
-    Awesome info about KNN
+    We used a k-Nearest Neighbors Model as a comparison to the baseline model.
+    
+    There were 129 features trained in this model from the cleaned and processed dataset. 
+    
+    ** OVERVIEW: **
+    * Assumes that similar things exist in close proximity
+    * Captures idea of similarity in distance, proximity, or closeness
+    * Euclidean distance is the popular and familiar choice to calculate distance
+    
     '''
 )
 base_model2_info = create_base_info('KNN', base_model2_desc)
-base_model2_rmse = create_rmse_info(0.000)
-base_model2_vars = create_var_info(20)
-base_model2_tab = create_base_tab(base_model2_info, base_model2_rmse, base_model2_vars)
+base_model2_rmse = create_rmse_info(32.175)
+base_model2_vars = create_var_info(129)
+base_model2_tab = create_base_tab(
+    base_model2_info, base_model2_rmse, base_model2_vars, knn_img)
 
 base_model3_desc = dcc.Markdown(
     '''
-    Awesome info about XGB Boost
+    As we used a Random Forest model for our baseline model, we wanted to compare the results to a model that contained all engineered features.
+    
+    There were 129 features trained in this model from the cleaned and processed dataset. 
     '''
 )
-base_model3_info = create_base_info('XGB Boost', base_model3_desc)
-base_model3_rmse = create_rmse_info(0.000)
-base_model3_vars = create_var_info(20)
-base_model3_tab = create_base_tab(base_model3_info, base_model3_rmse, base_model3_vars)
+base_model3_info = create_base_info('Random Forest', base_model3_desc)
+base_model3_rmse = create_rmse_info(24.520)
+base_model3_vars = create_var_info(129)
+base_model3_tab = create_base_tab(
+    base_model3_info, base_model3_rmse, base_model3_vars, rf_img)
+
+base_model4_desc = dcc.Markdown(
+    '''
+    We use an XGBoost model to investigate different boosting techniques as a comparison to the baseline model.
+    
+    There were 129 features trained in this model from the cleaned and processed dataset.
+    
+    ** OVERVIEW: **
+    * Implementation of the Gradient Boosting method 
+    * Uses more accurate approximations to find the best tree model
+    * Computes second-order gradients, i.e. second partial derivatives of the loss function
+    * Advanced regularization (L1 & L2), which improves model generalization
+    * Training is very fast and can be parallelized / distributed across clusters     
+    '''
+)
+base_model4_info = create_base_info('XGB Boost', base_model4_desc)
+base_model4_rmse = create_rmse_info(21.362)
+base_model4_vars = create_var_info(129)
+base_model4_tab = create_base_tab(
+    base_model4_info, base_model4_rmse, base_model4_vars, xg_img)
 
 tabs = dbc.Tabs(
     [
-        dbc.Tab(base_model1_tab, label="Baseline Model 1"),
-        dbc.Tab(base_model2_tab, label="Baseline Model 2"),
-        dbc.Tab(base_model3_tab, label="Baseline Model 3"),
+        dbc.Tab(base_model1_tab, label="Baseline Model - Random Forest"),
+        dbc.Tab(base_model2_tab, label="Comparing Model 1 - KNN"),
+        dbc.Tab(base_model3_tab, label="Comparing Model 2 - Random Forest"),
+        dbc.Tab(base_model4_tab, label="Comparing Model 3 - Catboost"),
     ]
 )
 
@@ -152,8 +233,8 @@ body = dbc.Container(
                         tabs
                     )
                 ]
-            )
-            
+            ),
+            className='model-tabs'
         ),
         dbc.Row(
             [html.H1('ADD INFO ABOUT FINAL MODEL'),
