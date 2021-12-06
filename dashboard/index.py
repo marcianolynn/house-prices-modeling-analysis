@@ -7,6 +7,7 @@ from pages.homepage import Homepage
 from pages.variables import Variables, build_count
 from pages.models import Models
 from pages.eda import EDA
+import base64
 
 
 app = dash.Dash(
@@ -20,6 +21,9 @@ app = dash.Dash(
         }])
 
 app.config.suppress_callback_exceptions = True
+
+image_filename = 'dashboard\\assets\\imgs\\bg.png' # replace with your own image
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 app.layout = html.Div([
     dcc.Location(id = 'url', refresh = False),
@@ -37,7 +41,6 @@ def display_page(pathname):
         return EDA()
     else:
         return Homepage()
-
 
 
 @app.callback(

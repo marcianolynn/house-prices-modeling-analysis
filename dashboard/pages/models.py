@@ -292,10 +292,10 @@ def make_final_cards(title, description, color_val):
     return feat_card
 
 
-feat_card = make_final_cards(str(129), 'Features', "rgb(217,175,107)")
-rmse_card = make_final_cards(str(19.901), 'RMSE', "rgb(217,175,107)")
+feat_card = make_final_cards(str(129), 'Features', "rgb(104,133,92)")
+rmse_card = make_final_cards(str(19.901), 'RMSE', "rgb(124,124,124)")
 dev_acc_card = make_final_cards(
-    str(1.01), 'Dev (Training) Accuracy', "rgb(217,175,107)")
+    str(1.01), 'Dev (Training) Accuracy', "rgb(175,100,88)")
 test_acc_card = make_final_cards(
     str(1.29), 'Kaggle (Test) Accuracy', "rgb(217,175,107)")
 

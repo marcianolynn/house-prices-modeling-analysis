@@ -22,7 +22,7 @@ overview = dcc.Markdown('''
                         ''')
 
 #homepage image
-image_filename = 'dashboard\\assets\\imgs\\ames.png' # replace with your own image
+image_filename = 'dashboard\\assets\\imgs\\houses.jpg' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 body = dbc.Container(
@@ -40,8 +40,8 @@ body = dbc.Container(
                 ),
                 dbc.Col(
                     [
-                        html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()),
-                                 style={'height':'70%', 'width':'70%'}),
+                        html.Img(src='data:image/jpg;base64,{}'.format(encoded_image.decode()),
+                                 style={'height':'60%', 'width':'60%'}),
                     ],
                     style={'textAlign': 'center'}
                 )
