@@ -9,46 +9,69 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input
+from dash import dash_table
 import base64
 # Navbar
 from pages.navbar import Navbar
 
 nav = Navbar()
 
+# model accuracy summary
+acc_df = pd.read_csv(
+    r'data/Accuracy_Summary.csv').drop(columns=['SN', 'Metric Kaggle'])
+
 # assets
 # home price image
-RF_img_filename = 'dashboard\\assets\\RF.png'
+RF_img_filename = 'dashboard\\assets\\imgs\\RF.png'
 RF_encoded_image = base64.b64encode(open(RF_img_filename, 'rb').read())
 
-KNN_img_filename = 'dashboard\\assets\\knn.png'
+KNN_img_filename = 'dashboard\\assets\\imgs\\knn.png'
 KNN_encoded_image = base64.b64encode(open(KNN_img_filename, 'rb').read())
 
-CB_img_filename = 'dashboard\\assets\\catboost.png'
+CB_img_filename = 'dashboard\\assets\\imgs\\catboost.png'
 CB_encoded_image = base64.b64encode(open(CB_img_filename, 'rb').read())
 
-XG_img_filename = 'dashboard\\assets\\xgboost.png'
+XG_img_filename = 'dashboard\\assets\\imgs\\xgboost.png'
 XG_encoded_image = base64.b64encode(open(XG_img_filename, 'rb').read())
+
+opt_img_filename = 'dashboard\\assets\\imgs\\optuna.gif'
+opt_encoded_image = base64.b64encode(open(opt_img_filename, 'rb').read())
 
 
 def create_img_div(encoded_img, img_type):
-    img_div = html.Div(
-        [
-            html.Img(
-                src='data:image/png;base64,{}'.format(
-                    encoded_img.decode()),
-                style={
-                    'height': '80%',
-                    'width': '80%'}
-            ),
-        ]
-    )
+    if img_type == 'png':
+        img_div = html.Div(
+            [
+                html.Img(
+                    src='data:image/png;base64,{}'.format(
+                        encoded_img.decode()),
+                    style={
+                        'height': '80%',
+                        'width': '80%'}
+                ),
+            ]
+        )
+    else:
+        img_div = html.Div(
+            [
+                html.Img(
+                    src='data:image/gif;base64,{}'.format(
+                        encoded_img.decode()),
+                    style={
+                        'height': '80%',
+                        'width': '80%'}
+                ),
+            ]
+        )
+
     return img_div
 
 
 rf_img = create_img_div(RF_encoded_image, 'png')
 knn_img = create_img_div(KNN_encoded_image, 'png')
+xg_img = create_img_div(XG_encoded_image, 'png')
 cb_img = create_img_div(CB_encoded_image, 'png')
-xg_img = create_img_div(CB_encoded_image, 'png')
+optuna_gif = create_img_div(opt_encoded_image, 'gif')
 
 
 def create_base_info(model_name, model_info):
@@ -143,9 +166,9 @@ def create_base_tab(info, rmse, vars, img_div):
 base_model1_desc = dcc.Markdown(
     '''
     We used a Random Forest model as our initial baseline model.
-    
-    There were 79 features trained in this model from the cleaned and processed dataset. 
-    
+
+    There were 79 features trained in this model from the cleaned and processed dataset.
+
     ** OVERVIEW: **
     * Grows a forest of decision trees
     * Data from these trees are then merged together to ensure the most accurate predictions
@@ -163,14 +186,14 @@ base_model1_tab = create_base_tab(
 base_model2_desc = dcc.Markdown(
     '''
     We used a k-Nearest Neighbors Model as a comparison to the baseline model.
-    
-    There were 129 features trained in this model from the cleaned and processed dataset. 
-    
+
+    There were 129 features trained in this model from the cleaned and processed dataset.
+
     ** OVERVIEW: **
     * Assumes that similar things exist in close proximity
     * Captures idea of similarity in distance, proximity, or closeness
     * Euclidean distance is the popular and familiar choice to calculate distance
-    
+
     '''
 )
 base_model2_info = create_base_info('KNN', base_model2_desc)
@@ -182,8 +205,8 @@ base_model2_tab = create_base_tab(
 base_model3_desc = dcc.Markdown(
     '''
     As we used a Random Forest model for our baseline model, we wanted to compare the results to a model that contained all engineered features.
-    
-    There were 129 features trained in this model from the cleaned and processed dataset. 
+
+    There were 129 features trained in this model from the cleaned and processed dataset.
     '''
 )
 base_model3_info = create_base_info('Random Forest', base_model3_desc)
@@ -195,15 +218,15 @@ base_model3_tab = create_base_tab(
 base_model4_desc = dcc.Markdown(
     '''
     We use an XGBoost model to investigate different boosting techniques as a comparison to the baseline model.
-    
+
     There were 129 features trained in this model from the cleaned and processed dataset.
-    
+
     ** OVERVIEW: **
-    * Implementation of the Gradient Boosting method 
+    * Implementation of the Gradient Boosting method
     * Uses more accurate approximations to find the best tree model
     * Computes second-order gradients, i.e. second partial derivatives of the loss function
     * Advanced regularization (L1 & L2), which improves model generalization
-    * Training is very fast and can be parallelized / distributed across clusters     
+    * Training is very fast and can be parallelized / distributed across clusters
     '''
 )
 base_model4_info = create_base_info('XGB Boost', base_model4_desc)
@@ -212,12 +235,173 @@ base_model4_vars = create_var_info(129)
 base_model4_tab = create_base_tab(
     base_model4_info, base_model4_rmse, base_model4_vars, xg_img)
 
+# load summary of model accuracies
+acc_table = dash_table.DataTable(
+    id='var_table',
+    columns=[{"name": i, "id": i} for i in acc_df.columns],
+    data=acc_df.to_dict('records'),
+    style_data={
+        'whiteSpace': 'pre-line',
+        'height': '20px',
+        'backgroundColor': 'white'
+    },
+    style_data_conditional=[
+        {
+            'if': {'row_index': 'odd'},
+            'backgroundColor': 'rgb(220, 220, 220)',
+        }
+    ],
+    fixed_rows={'headers': True},
+    page_action='none',
+    style_table={
+        'height': '400px',
+        'width': '1200px'},
+    style_cell={
+        'textAlign': 'left',
+        'textOverflow': 'ellipsis',
+        'maxWidth': 0,
+        'height': '50px'},
+    style_header={
+        'backgroundColor': 'rgb(210, 210, 210)',
+        'color': 'black',
+        'fontWeight': 'bold'
+    }
+)
+
+
+# get final model info
+def make_final_cards(title, description, color_val):
+    feat_card = dbc.Col(
+        [
+            dbc.Card(
+                dbc.CardBody(
+                    [
+                        html.H1(title, className="card-title"),
+                        html.P(
+                            description,
+                            className="card-text",
+                        )
+                    ]
+                ),
+                style={"width": "17rem"},
+                color=color_val,
+                inverse=True
+            ),
+        ],
+    )
+    return feat_card
+
+
+feat_card = make_final_cards(str(129), 'Features', "rgb(217,175,107)")
+rmse_card = make_final_cards(str(19.901), 'RMSE', "rgb(217,175,107)")
+dev_acc_card = make_final_cards(
+    str(1.01), 'Dev (Training) Accuracy', "rgb(217,175,107)")
+test_acc_card = make_final_cards(
+    str(1.29), 'Kaggle (Test) Accuracy', "rgb(217,175,107)")
+
+# catboost overview
+catboost_info = dbc.Card(
+    [
+        dbc.CardHeader(html.B("Catboost Overview"),
+                       style={'background-color': 'rgb(229,236,246)'}),
+        dbc.CardBody(
+            dcc.Markdown('''
+                        Catboosting builds decision tree sequentially to predict residuals from the previous tress.
+
+                        We chose catboost as our final model due to:
+                        * User friendly categorical handling
+                            * Target handling is applied if specified
+                        * Faster than XGBoost
+                            * Minimal Variance Sampling Technique
+                        * More stable than lightGBM
+                            * Full rank tree structure
+                        ''')
+        )
+    ]
+)
+
+# optuna info
+optuna_info = dbc.Card(
+    [
+        dbc.CardHeader(html.B("Optuna Overview"),
+                       style={'background-color': 'rgb(229,236,246)'}),
+        dbc.CardBody(
+            dcc.Markdown('''
+                        Optuna allowed us to enhance our modeling training to achieve optimal results
+
+                        * Utilizes a traditional searchCV brute force method
+                        * Hyperparameter optimization coiciding with the gradient descent algorithm
+                        ''')
+        )
+    ]
+)
+
+final_body = dbc.Container(
+    [
+        dbc.Row(
+            cb_img,
+            className="variables-row",
+            justify="center"),
+        dbc.Row(
+            [
+                feat_card,
+                rmse_card,
+                dev_acc_card,
+                test_acc_card
+            ],
+            className=["final-models-row"]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    catboost_info,
+                    md=4,
+                ),
+                dbc.Col(
+                    [
+                        dbc.Row(
+                            optuna_info
+                        ),
+                        dbc.Row(
+                            dbc.Button(
+                                "View our Streamlite Final Model Implementation",
+                                href="https://share.streamlit.io/stjokerli/stream_lite_showcase/main/main.py",
+                                external_link=True,
+                                color="secondary",
+                                size='lg'),
+                            className="variables-row",
+                            justify="center"
+                        ),
+
+                    ],
+                    md=5
+                )
+            ],
+            className="eda-row",
+            justify="center"
+        ),
+        dbc.Row(
+            optuna_gif,
+            className="variables-row",
+            justify="center"
+        )
+
+    ]
+)
+
 tabs = dbc.Tabs(
     [
         dbc.Tab(base_model1_tab, label="Baseline Model - Random Forest"),
         dbc.Tab(base_model2_tab, label="Comparing Model 1 - KNN"),
         dbc.Tab(base_model3_tab, label="Comparing Model 2 - Random Forest"),
-        dbc.Tab(base_model4_tab, label="Comparing Model 3 - Catboost"),
+        dbc.Tab(base_model4_tab, label="Comparing Model 3 - XGBoost"),
+        dbc.Tab(
+            dbc.Container(
+                dbc.Row(
+                    acc_table,
+                    className='model-summary')
+            ),
+            label="Model Summary")
     ]
 )
 
@@ -237,10 +421,7 @@ body = dbc.Container(
             className='model-tabs'
         ),
         dbc.Row(
-            [html.H1('ADD INFO ABOUT FINAL MODEL'),
-             html.P('ADD CHART')],
-            className="variables-row",
-            justify="center"
+            [final_body]
         )
     ]
 )
@@ -252,20 +433,3 @@ def Models():
         body
     ])
     return layout
-
-
-# def build_graph(city):
-#     data = [go.Scatter(x=df.index,
-#                        y=df[city],
-#                        marker={'color': 'orange'})]
-#     graph = dcc.Graph(
-#         figure={
-#             'data': data,
-#             'layout': go.Layout(
-#                 title='{} Population Change'.format(city),
-#                 yaxis={'title': 'Population'},
-#                 hovermode='closest'
-#             )
-#         }
-#     )
-#     return graph

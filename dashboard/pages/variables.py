@@ -247,7 +247,7 @@ def build_count(variable):
 
 
 # replace with your own image
-image_filename = 'dashboard\\assets\\preprocessing.png'
+image_filename = 'dashboard\\assets\\imgs\\preprocessing.png'
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 ### BODY ###

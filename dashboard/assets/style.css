@@ -46,6 +46,24 @@
     align-items: center;
 }
 
+.model-summary{
+    text-align: center;
+    padding-top: 40px;
+    justify-content: center;
+    margin:auto;
+}
+
+.final-model-cards{
+    justify-content: center;
+    text-align: center;
+}
+
+.final-models-row{
+    margin-top:10px;
+    justify-content: center;
+    align-items:center;
+}
+
 .center-items{
     align-items: center;
     text-align: center;

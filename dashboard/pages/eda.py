@@ -30,10 +30,10 @@ df_FEN = pd.read_csv(r'data/W207_original_IC_FEN.csv')
 
 # assets
 # home price image
-house_img_filename = 'dashboard\\assets\\house_dollar.jpg'
+house_img_filename = 'dashboard\\assets\\imgs\\house_dollar.jpg'
 house_encoded_image = base64.b64encode(open(house_img_filename, 'rb').read())
 
-fg_img_filename = 'dashboard\\assets\\fg_calc.png'
+fg_img_filename = 'dashboard\\assets\\imgs\\fg_calc.png'
 fg_encoded_image = base64.b64encode(open(fg_img_filename, 'rb').read())
 
 # determine absolute correlation of features with our target variable

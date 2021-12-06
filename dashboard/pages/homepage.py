@@ -22,7 +22,7 @@ overview = dcc.Markdown('''
                         ''')
 
 #homepage image
-image_filename = 'dashboard\\assets\\ames.png' # replace with your own image
+image_filename = 'dashboard\\assets\\imgs\\ames.png' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 body = dbc.Container(
