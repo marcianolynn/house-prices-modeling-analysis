@@ -17,7 +17,7 @@ In this repo, you will find the following subdirectories:
 
 **notebook** - containing the Jupiter notebooks for our baseline submission, final submission and also saved models
 
-**streamlite** - an interactive platform to test our model and get your home price prediction!
+**streamlit** - an interactive platform to test our model and get your home price prediction!
 
 ---
 ### Tools used
@@ -27,8 +27,10 @@ In this repo, you will find the following subdirectories:
 - Catboost
 - Shap
 - Optuna
-- Dash 
-<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Readme%20Image.jpeg" alt="alt text" width="100" height="100">
+
+- Dash <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Dash_by_plotly.jpeg" alt="alt text" width="200" height="100">
+
+- Streamlit 
 
 ---
 ### References
