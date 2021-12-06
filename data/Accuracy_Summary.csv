@@ -1,6 +1,6 @@
 SN,Type,Model,Feature,Num Feature,RMSE,Metric Kaggle
-0,Base line Model,Random Forest,Original - Featur with most value missing,73,"29.433",
-1,Comparing Model,KNN,Original + Feature Engineering,129,"32.175",
-2,Comparing Model,Random Forest,Original + Feature Engineering,129,"24.520",
-3,Comparing Model,XGBoost+ Tunning,Original + Feature Engineering,129,"21.362",
-4,Final Model,CatBoost+Optuna Tunning,Original + Feature Engineering,129,"19.901",1.01(dev)/1.29(kaggle)
+0,Base line Model,Random Forest,Original - Featur with most value missing,73,29433,
+1,Comparing Model,KNN,Original + Feature Engineering,129,32175,
+2,Comparing Model,Random Forest,Original + Feature Engineering,129,24520,
+3,Comparing Model,XGBoost+ Tunning,Original + Feature Engineering,129,21362,
+4,Final Model,CatBoost+Optuna Tunning,Original + Feature Engineering,129,19901,1.01(dev)/1.29(kaggle)

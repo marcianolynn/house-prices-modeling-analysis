@@ -178,7 +178,7 @@ base_model1_desc = dcc.Markdown(
     '''
 )
 base_model1_info = create_base_info('Random Forest', base_model1_desc)
-base_model1_rmse = create_rmse_info(29.433)
+base_model1_rmse = create_rmse_info(29433)
 base_model1_vars = create_var_info(73)
 base_model1_tab = create_base_tab(
     base_model1_info, base_model1_rmse, base_model1_vars, rf_img)
@@ -197,7 +197,7 @@ base_model2_desc = dcc.Markdown(
     '''
 )
 base_model2_info = create_base_info('KNN', base_model2_desc)
-base_model2_rmse = create_rmse_info(32.175)
+base_model2_rmse = create_rmse_info(32175)
 base_model2_vars = create_var_info(129)
 base_model2_tab = create_base_tab(
     base_model2_info, base_model2_rmse, base_model2_vars, knn_img)
@@ -210,7 +210,7 @@ base_model3_desc = dcc.Markdown(
     '''
 )
 base_model3_info = create_base_info('Random Forest', base_model3_desc)
-base_model3_rmse = create_rmse_info(24.520)
+base_model3_rmse = create_rmse_info(24520)
 base_model3_vars = create_var_info(129)
 base_model3_tab = create_base_tab(
     base_model3_info, base_model3_rmse, base_model3_vars, rf_img)
@@ -230,7 +230,7 @@ base_model4_desc = dcc.Markdown(
     '''
 )
 base_model4_info = create_base_info('XGB Boost', base_model4_desc)
-base_model4_rmse = create_rmse_info(21.362)
+base_model4_rmse = create_rmse_info(21362)
 base_model4_vars = create_var_info(129)
 base_model4_tab = create_base_tab(
     base_model4_info, base_model4_rmse, base_model4_vars, xg_img)
@@ -293,7 +293,7 @@ def make_final_cards(title, description, color_val):
 
 
 feat_card = make_final_cards(str(129), 'Features', "rgb(104,133,92)")
-rmse_card = make_final_cards(str(19.901), 'RMSE', "rgb(124,124,124)")
+rmse_card = make_final_cards(str(19901), 'RMSE', "rgb(124,124,124)")
 dev_acc_card = make_final_cards(
     str(1.01), 'Dev (Training) Accuracy', "rgb(175,100,88)")
 test_acc_card = make_final_cards(
