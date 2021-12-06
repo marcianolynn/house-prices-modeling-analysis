@@ -33,6 +33,10 @@ In this repo, you will find the following subdirectories:
 - Streamlit <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/streamlit-logo-secondary-colormark-darktext.svg" alt="alt text" width="100" height="50">
 
 ---
+### Sample screenshot of Dash visualization
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/image.png" alt="alt text" width="1000" height="800">
+
+---
 ### References
 1. Data dictionary and raw data - https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data
 2. Missing Values, Ordinal data and stories - https://www.kaggle.com/mitramir5/missing-values-ordinal-data-and-stories/notebook
