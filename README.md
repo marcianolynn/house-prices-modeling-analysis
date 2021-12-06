@@ -9,8 +9,6 @@ This project was completed by Lynn Marciano, Wanyu Li and Jason Cheung.
 
 The goal of this final project was to use the Ames Housing Dataset from [Kaggle](https://www.kaggle.com/c/house-prices-advanced-regression-techniques) that describes different aspects of residential homes in Ames, Iowa, to form a predictive model for house prices.  In our Jupiter notebook, you will see how we have used exploratory data analysis, feature engineering, PCA, and various models to arrive at our final model. 
 
-Algorithms used include Random Forest, KNN, XGB and Catboosting.
-
 In this repo, you will find the following subdirectories:
 
 **dashboard** - a Dash dashboard for in-class presentation
@@ -20,3 +18,20 @@ In this repo, you will find the following subdirectories:
 **notebook** - containing the Jupiter notebooks for our baseline submission, final submission and also saved models
 
 **streamlite** - an interactive platform to test our model and get your home price prediction!
+
+---
+### Tools used
+- Random Forest (RF)
+- k-Nearest-Neighbors (kNN)
+- eXtreme Gradient Boosting (XGB)
+- Catboost
+- Shap
+- Optuna
+- Dash 
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Readme%20Image.jpeg" alt="alt text" width="100" height="100">
+
+---
+### References
+1. Data dictionary and raw data - https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data
+2. Missing Values, Ordinal data and stories - https://www.kaggle.com/mitramir5/missing-values-ordinal-data-and-stories/notebook
+3. House Price Feature Engineering using only XGB - https://www.kaggle.com/filterjoe/house-price-feature-engineering-using-only-xgboost#Step-2---Feature-Utility-Scores
