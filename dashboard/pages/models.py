@@ -37,6 +37,8 @@ XG_encoded_image = base64.b64encode(open(XG_img_filename, 'rb').read())
 opt_img_filename = 'dashboard\\assets\\imgs\\optuna.gif'
 opt_encoded_image = base64.b64encode(open(opt_img_filename, 'rb').read())
 
+tree_imag_filename= 'dashboard\\assets\\imgs\\tree_history.png'
+tree_encoded_image = base64.b64encode(open(tree_imag_filename, 'rb').read())
 
 def create_img_div(encoded_img, img_type):
     if img_type == 'png':
@@ -72,7 +74,7 @@ knn_img = create_img_div(KNN_encoded_image, 'png')
 xg_img = create_img_div(XG_encoded_image, 'png')
 cb_img = create_img_div(CB_encoded_image, 'png')
 optuna_gif = create_img_div(opt_encoded_image, 'gif')
-
+tree_hist_img = create_img_div(tree_encoded_image, 'png')
 
 def create_base_info(model_name, model_info):
     content = dbc.Card(
@@ -406,7 +408,18 @@ tabs = dbc.Tabs(
 )
 
 body = dbc.Container(
-    [
+    [   dbc.Row(dbc.Card(
+                [
+                    dbc.CardHeader(
+                        html.H1("Tree Algorithm Timeline")
+                    ),
+                    dbc.CardBody(
+                        tree_hist_img
+                    )
+                ]
+            ),
+            className='tree history'
+        ),
         dbc.Row(
             dbc.Card(
                 [
