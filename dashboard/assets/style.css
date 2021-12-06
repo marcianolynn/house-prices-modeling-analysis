@@ -24,12 +24,17 @@
     margin-top:50px;
     padding: 20px;
     justify-content: center;
+    align-items:center;
 }
 
 .data_dict_accor{
     background-color: rgb(155,171,189);
     text-emphasis: 10px;
     margin-bottom: 50px;
+}
+
+.eda_tabs{
+    margin-top:50px;
 }
 
 .center-items{

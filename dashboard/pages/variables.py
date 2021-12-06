@@ -197,8 +197,11 @@ output = html.Div(id='var_output',
 
 def build_count(variable):
     if variable in all_vars:
-        title_text = var_df.loc[var_df['Variable'] ==
-                                variable]['Description'].values[0]
+        try:
+            title_text = var_df.loc[var_df['Variable'] ==
+                                    variable]['Description'].values[0]
+        except:
+            title_text = ''
 
         # variable histogram
         hist = dcc.Graph(

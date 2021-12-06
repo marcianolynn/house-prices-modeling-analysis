@@ -13,8 +13,8 @@ from dash_table.Format import Format, Scheme
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Output, Input
 import base64
+from sklearn.decomposition import PCA
 # Navbar
 from pages.navbar import Navbar
 
@@ -26,14 +26,15 @@ header = html.H3(
 
 # dataset
 df = pd.read_csv(r'data/W207_original_IC.csv')
-
 df_FEN = pd.read_csv(r'data/W207_original_IC_FEN.csv')
 
 # assets
 # home price image
-# replace with your own image
-image_filename = 'dashboard\\assets\\house_dollar.jpg'
-encoded_image = base64.b64encode(open(image_filename, 'rb').read())
+house_img_filename = 'dashboard\\assets\\house_dollar.jpg'
+house_encoded_image = base64.b64encode(open(house_img_filename, 'rb').read())
+
+fg_img_filename = 'dashboard\\assets\\fg_calc.png'
+fg_encoded_image = base64.b64encode(open(fg_img_filename, 'rb').read())
 
 # determine absolute correlation of features with our target variable
 corr_table = df.corr()
@@ -55,7 +56,7 @@ eda_overview = dbc.Card(
                      [
                          html.Img(
                              src='data:image/jpg;base64,{}'.format(
-                                 encoded_image.decode()),
+                                 house_encoded_image.decode()),
                              style={
                                  'height': '50%',
                                  'width': '50%'}
@@ -69,7 +70,7 @@ eda_overview = dbc.Card(
     }
 )
 
-fg_overview = dbc.Card(
+fg_target_overview = dbc.Card(
     dbc.CardBody(
         dcc.Markdown('''
                         # Price Per Square Foot
@@ -118,13 +119,97 @@ correlation_info = dbc.Card([
                         ''')
     )
 ]
+)
 
+# brief overview of the feature engineering
+fg_overview = dbc.Card(
+    dbc.CardBody(
+        [
+            dcc.Markdown('''
+                        # Feature Engineering
+                        
+                        Due to the observations that our initial target variable, "SalePrice" did not have a normal distribution,
+                        we created a new target variable, **Sale Price per Square Foot**, for our observations.
+                        
+                        With our new target variable, we applied the same logic to the other variables.
+                        
+                        **Value:**
+                        
+                        * Identifying a normally distributed variable allows for easier observations during statistical testing
+                        * Creating new engineered variables will bring more value to our dataset to improve our models
+                        '''),
+            dbc.Col(
+                html.Div(
+                    [
+                        html.Img(
+                            src='data:image/png;base64,{}'.format(
+                                fg_encoded_image.decode()),
+                            style={
+                                'height': '90%',
+                                'width': '90%'}
+                        ),
+                    ]
+                ), style={'textAlign': 'center'})
+        ]
+    ),
+    style={
+        'width': 'auto'
+    }
+)
+
+# overview of other engineered variables
+fg_other_info = dbc.Card(
+    [
+        dbc.CardHeader(html.B("Engineered Variables"),
+                       style={'background-color': 'rgb(229,236,246)'}),
+        dbc.CardBody(
+            dcc.Markdown('''
+                        As mentioned, we combined our variables with the same logic with our new target variable\
+                        and created other new variables based on similar expected features
+                        
+                        * **Indoor Area** = Ground Living Area + Total Basement sq. ft.
+                        * **Sale Price per Indoor Area** = Sale Price / Indoor Area
+                        * **Year after Remodel** = Year Sold – Year Remodel Add
+                        * **Year after Built** = Year Sold – Year Built
+                        * **Total Rooms above Ground per Ground Living Area** = Total Rooms above Ground / Ground Living Area
+                        * **Total Bathrooms in Basement** = No. of Full Bathrooms in Basement + No. of Half Bathrooms in Basement
+                        * **Total Bathrooms above Ground** = No. of Full Bathrooms above Ground + No. of Half Bathrooms above Ground.
+                        
+                        70 other variables by dividing the original variables in the dataset by Indoor Area,\
+                            and recoding variables into binary on whether or not they have a valid value.
+                        ''')
+        )
+    ]
+)
+
+#overview of PCA we did for reducing models
+pca_overview = dbc.Card(
+    dbc.CardBody(
+        [
+            dcc.Markdown('''
+                        # Principal Component Analysis
+                        We observe the PCA for our newly engineered variables.
+                        
+                        Since there are 17 variables related to the area of the house, they could be highly correlated and
+                        be considered to demonstrate multiollinearity.
+                        
+                        For example, houses with a large above ground area will almost certainly also have a large first floor area.
+                         
+                        Therefore, we decided to put these 17 variables through PCA and aimed to retain at least 99.9% of the variability.  
+                        As a result, we were able to reduce the number of variables from 17 to 7, with a 60% reduction and still able to maintain 99.9% of the cumulative variance.
+                        '''),
+        ]
+    ),
+    style={
+        'width': 'auto'
+    }
 )
 
 # create histogram plots of the target variables
 init_target_hist = px.histogram(
     df['SalePrice'],
-    x="SalePrice"
+    x="SalePrice",
+    color_discrete_sequence=["rgb(98,83,119)"]
 )
 
 init_target_hist.update_layout(
@@ -132,13 +217,14 @@ init_target_hist.update_layout(
     yaxis_title="Count",
     font=dict(
         size=18,
-        color="RebeccaPurple"
+        color="rgb(98,83,119)"
     )
 )
 
 fen_target_hist = px.histogram(
     df_FEN['FE_SalePrice_Per_IndoorArea'],
-    x="FE_SalePrice_Per_IndoorArea"
+    x="FE_SalePrice_Per_IndoorArea",
+    color_discrete_sequence=["rgb(175,100,88)"]
 )
 
 fen_target_hist.update_layout(
@@ -146,7 +232,7 @@ fen_target_hist.update_layout(
     yaxis_title="Count",
     font=dict(
         size=18,
-        color="RebeccaPurple"
+        color="rgb(175,100,88)"
     )
 )
 
@@ -189,8 +275,27 @@ corr_dash_table = dash_table.DataTable(
     page_action='none',
 )
 
-# define layout
-body = dbc.Container(
+# get the PCA results
+def get_PCA():
+    pca_results = pd.read_csv(r'data\\PCA results.csv')
+    pca_features = list(pca_results['Area Factors'])
+
+    exp_var_cumul = list(pca_results['Cumulative Sum of Explained Variance Ratio'])
+
+    pca_plot = px.area(
+        x=range(1, len(exp_var_cumul) + 1),
+        y=exp_var_cumul,
+        labels={"x": "# Components", "y": "Explained Variance"},
+        color_discrete_sequence=["rgb(82,106,131)"]
+    ).update_layout(
+        yaxis_range=[0.98,1]
+    )
+    
+    return pca_plot
+
+
+# make the EDA tab
+eda_tab = dbc.Tab(
     [
         dbc.Row(
             [
@@ -199,7 +304,7 @@ body = dbc.Container(
                     md=4
                 ),
                 dbc.Col(
-                    [fg_overview],
+                    [fg_target_overview],
                     md=6
                 )
             ],
@@ -240,6 +345,59 @@ body = dbc.Container(
             ],
             className=["corr-row"],
             justify="center"
+        )
+    ],
+    label="Initial Exploratory Data Analysis"
+)
+
+fg_tab = dbc.Tab(
+    [
+        dbc.Row(
+            [
+                dbc.Col(
+                    [fg_overview],
+                    md=6
+                ),
+                dbc.Col(
+                    [fg_other_info],
+                    md=6
+                )
+            ],
+            className="eda-row",
+            justify="center"
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [pca_overview],
+                    md=6
+                ),
+                dbc.Col(
+                    dcc.Graph(
+                        id='fen_target',
+                        figure=get_PCA()
+                    ),
+                    md=6
+                )
+            ],
+            className="eda-row",
+            justify="center"
+        )
+    ],
+    label="Feature Engineering"
+)
+
+
+# define layout
+body = dbc.Container(
+    [
+        dbc.Tabs(
+            [
+                eda_tab,
+                fg_tab
+            ],
+            className='eda_tabs'
+
         )
     ]
 )
