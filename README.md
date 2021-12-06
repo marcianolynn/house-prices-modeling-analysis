@@ -28,12 +28,23 @@ In this repo, you will find the following subdirectories:
 - Shap
 - Optuna
 
-- Dash <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Dash_by_plotly.jpeg" alt="alt text" width="100" height="50">
+- Dash 
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/Dash_by_plotly.jpeg" alt="alt text" width="100" height="50">
 
-- Streamlit <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/streamlit-logo-secondary-colormark-darktext.svg" alt="alt text" width="100" height="50">
+- Streamlit 
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/streamlit-logo-secondary-colormark-darktext.svg" alt="alt text" width="100" height="50">
 
 ---
-### Sample screenshot of Dash visualization
+###  Screenshot of Dash visualization - Data and variables
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/dash_screenshot.png" alt="alt text" width="1000" height="800">
+
+###  Screenshot of Dash visualization - EDA
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/dash_screenshot_1.png" alt="alt text" width="1000" height="800">
+
+###  Screenshot of Dash visualization - Baseline model
+<img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/dash_screenshot_2.png" alt="alt text" width="1000" height="800">
+
+###  Screenshot of Dash visualization - Final model
 <img src="https://github.com/marcianolynn/house-prices-modeling-analysis/blob/main/images/image.png" alt="alt text" width="1000" height="800">
 
 ---
